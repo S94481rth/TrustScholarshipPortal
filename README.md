@@ -1,3 +1,24 @@
+# How to loally set up the Project?
+## 1. clone the repository
+`git clone https://github.com/S94481rth/TrustScholarshipPortal.git`
+
+## 2. Then move into the portal directory
+`cd TrustScholarshipPortal`
+
+## 3. install node_modules from the package.json
+`npm install`
+
+## 4. add environmental variables and credentials to .env and credentials.json respectively(these two files will be shared privately!!!)
+### .env file
+    - PORT=
+    - MONGO_URL=
+### credentials.json
+    - {"web" : {}} //So on...
+## 5. Run the server.js file
+`node server.js`
+
+---
+
 # Admin Service Endpoints
 
 This document provides information on how to use the Admin Service endpoints.
@@ -117,6 +138,8 @@ Status: 200
 }
 ```
 
+--- 
+--- 
 # Application Form Endpoints
 # Scholarship Portal Backend API
 
@@ -234,3 +257,98 @@ Welcome to the Scholarship Portal Backend API! Below are the endpoints available
   "status": "Reject",
   "reasonForRejection": "Incomplete documents"
 }
+```
+
+--- 
+---
+
+# Document Service
+
+This repository contains an Express.js application for uploading, updating, reading and deleting documents from database.
+
+## Prerequisites
+
+Before running the application, make sure you have the following installed on your machine:
+
+- Node.js
+- MongoDB
+
+## Getting Started
+
+To gt started with any document sharing service, follow these steps:
+
+1. Clone the repository to your local machine:
+
+   ```bash
+   git clone -b document_service https://github.com/VinidraDevOps/ScholarshipPortal.git
+
+2. Navigate to the project directory:
+    ```bash
+    cd document_service
+
+3. Make sure you have all the necessary dependencies installed (c, etc.)
+    ```bash
+    npm install express mongodb multer
+
+4. Run mongodb localhost. Make sure it's running in 27017 port. 
+
+5. Make sure to create a collection named **documents** in the current database.
+
+6. Make these neccessary changes:
+    - set the **credentials.json** file path from root correctly
+    - in **connectToDB()** function change database name to your database name
+
+6. Run server.js. 
+
+## Endpoints
+The following endpoints are available in the application:
+
+PUT /updateFile : To update a file.
+Request Body: **file_category can sslc, puc, bonafide etc. This will be the actual key in the document.**
+
+json : 
+{
+    "userid" : userid,
+    *"file_category"* : file
+}
+
+
+POST /uploadFile: Upload a single file.
+Request Body:
+
+json
+{
+    "userid": userid,
+    *"file_category"* : file
+}
+
+POST /uploadFiles: Upload a multiple files.
+Request Body:
+
+json
+{
+    "userid": userid,
+    *"file_category1"* : file,
+    *"file_category2"* : file
+}
+
+
+GET /getFile: Read back a file from the database.
+Request Body: *file_category* should be same as the one used while uploading the files.
+
+json
+{
+    "userid": userid,
+    "fileName": *"file_category"*
+}
+
+DELETE /deleteFile: Delete a file from the database.
+Request Body:
+
+json
+{
+    "userid": userid,
+    "fileName": *"file_category"*
+}
+
+
