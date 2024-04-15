@@ -163,7 +163,18 @@ Welcome to the Scholarship Portal Backend API! Below are the endpoints available
   - state: State of residence
   - current_address: Current residential address
   - permanent_address: Permanent residential address
-
+```json
+{
+    "permanent_address":"mavalli",
+    "current_address":"mavalli",
+    "aadhar_number": 7465839210, 
+    "gender": "Female",
+    "date_of_birth": "2003-05-23",
+    "mobile_number": "9785462135",
+    "email_address":"anjali@yahoo.com",
+    "full_name": "Anjali Ramakrishnan"
+}
+```
 # Once the personal details page is sent, in the response
 # you get the user_id in the response
 # Locally store it in the front end and send it in the req.body.user_id in the following pages
@@ -180,7 +191,18 @@ Welcome to the Scholarship Portal Backend API! Below are the endpoints available
   - college_name: Name of the college
   - puc_marks: PUC marks
   - entrance_score: Entrance exam score
-
+```json
+{
+    "user_id" : "ED746582003523",
+    "semestereScores" : [{"sem":1, "score": 9.0}, {"sem":2, "score": 9.3}, {"sem":3, "score": 9.2}],
+    "entrance_score" : 90,
+    "puc_marks" : 98,
+    "college_name" : "BMSCE",
+    "sslc_marks": 96,
+    "puc_name": "RVPU",
+    "school_name": "DPS"
+}
+```
 # Keep in mind that all fields are not mandatory, if you want to send father and mother details only, it is totally fine, but when you choose to only send father and mother info , make sure you send all details related to them.... else it is will stored as an empty string in the db 
 ## Family Details
 - Endpoint: `http:localhost:3000/application/uploadFamilyDetails`
