@@ -40,11 +40,12 @@ exports.insertPersonaldDetails = (basic, contact) => {
 exports.insertEducationDetails = (education, user_id) => {
     return new Promise(async (resolve, reject) => {
         try{
-            await User.findOneAndUpdate(
+            const newUser = await User.findOneAndUpdate(
                 {userid : user_id},
                 {educationDetail : education},
                 {new : true}
             )
+            console.log(newUser)
             await education.save()
             resolve()
         }catch(e){

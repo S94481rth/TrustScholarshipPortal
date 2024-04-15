@@ -188,17 +188,17 @@ app.put('/updateFile',upload.any(), async (req,res)=>{
 app.post('/uploadFiles', upload.any(), async(req, res)=>{
     
     let document = {}
-
+    
     //validating the request
     if(!req.body.userid){
         return res.status(400).send('userid field id required');
     }
     const userid = req.body.userid;
-
+    
     if (!req.files || req.files.length === 0) {
         return res.status(400).send('No files uploaded.');
     }
-
+    
     if(await Document.findOne({userid:userid}) === null){
         //uploading document to the database
         try{
@@ -208,10 +208,10 @@ app.post('/uploadFiles', upload.any(), async(req, res)=>{
                 let fileId = await uploadFile(file, userid);
                 document[field] = fileId;
             });
-
+            
             await Promise.all(uploadPromises);
             const doc = new Document(document);
-
+            
             // await collection.insertOne(document);
             await doc.save();
             return res.status(200).json({message : 'Files inserted successfully'});
@@ -226,18 +226,48 @@ app.post('/uploadFiles', upload.any(), async(req, res)=>{
                 const fileId = await uploadFile(file, userid);
                 await Document.findOneAndUpdate({userid:userid}, {[field] : fileId}, {new : false, upsert:false});
             })
-
+            
             await Promise.all(uploadPromises);
-
+            
             return res.status(200).json({message : "Files inserted successfully"});
         }catch(error){
             return res.json({error:error.message});
         }
         
     }
-
+    
 })
 
+app.post('/upsertFile', upload.any(), async (req, res) => {
+
+    //validating the request
+    let file;
+    if(req.files){
+        file = req.files[0];
+    }
+    else{
+        return res.status(400).send('File is required');
+    }
+
+    const userid = req.body.userid;
+    //deleting existing document
+    try{
+        const document = await Document.findOne({userid : userid});
+        let fileId = document[file.fieldname];
+
+        if(fileId !== ''){
+            await deleteFile(fileId);
+        }
+        const key = file.fieldname;
+        fileId = await uploadFile(file, userid);
+        await Document.findOneAndUpdate({userid:userid}, {[key] : fileId}, {new:false, upsert:false});
+        return res.status(200).json({message : 'File updated successfully'});
+    }
+    catch (error){
+        return res.json({error : error.message});
+    }
+
+})
 
 // upload single file to the database
 app.post('/uploadFile', upload.any(), async(req, res)=>{

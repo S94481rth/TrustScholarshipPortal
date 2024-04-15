@@ -9,6 +9,7 @@ const Education = require("../../models/EducationSchema/Education.model")
 const School = require("../../models/EducationSchema/SSLC.model")
 const PUC = require("../../models/EducationSchema/PUC.model")
 const University = require("../../models/EducationSchema/Graduation.model")
+const SemesterScore= require("../../models/EducationSchema/SemesterScore.model")
 
 const Family = require("../../models/FamilySchema/Family.model")
 const Father = require("../../models/FamilySchema/Father.model")
@@ -60,11 +61,24 @@ exports.academicDetails = async (req,res) => {
     const college_name = req.body.college_name
     const puc_marks =  req.body.puc_marks
     const entrance_score = req.body.entrance_score
+    const semester_marks = req.body.semestereScores // is an array of type SemesterScore
+
+    let semesterScores = []
+
+    console.log(semester_marks)
+    console.log(typeof(semester_marks))
+    for(let semesterScore of semester_marks){
+        const sem = semesterScore['sem']
+        const score = semesterScore['score']
+
+        const semesterScoreObj = new SemesterScore({semester : sem, score: score})
+        semesterScores.push(semesterScoreObj)
+    }
 
     let puc_obj, school_obj, college_obj
     school_obj = new School({schoolname : school_name || "na", standard : standard || 10 , percentage : sslc_marks || 0})
     puc_obj = new PUC({collegename : puc_name || "na", percentage : puc_marks || 0})
-    college_obj = new University({collegename : college_name || "na", entrance_score : entrance_score || 0})
+    college_obj = new University({collegename : college_name || "na", entrance_score : entrance_score || 0, score : semesterScores || []})
     const e = new Education({sslc : school_obj, puc : puc_obj, graduation : college_obj})
 
     try{
